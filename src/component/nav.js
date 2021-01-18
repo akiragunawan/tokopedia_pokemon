@@ -2,13 +2,7 @@ import pokemon_img from '../assets/image/pokemon.png';
 import pokeball from '../assets/image/pokeball.png'
 import compass from '../assets/image/compass.png'
 import { Link, Switch } from "react-router-dom";
-import react, { useState } from 'react';
-
-
-
-
-
-
+import React, { useState } from 'react';
 function Nav() {
     const [active1, setActive1] = useState(true);
     const [active2, setActive2] = useState(false);
@@ -20,34 +14,25 @@ function Nav() {
         setActive2(true)
         setActive1(false)
     }
-
-
     var db;
     var request = window.indexedDB.open("pokemon_data", 1);
+    request.onupgradeneeded = function (event) {
+        var db = event.target.result;
+        db.createObjectStore("data", {
+            keyPath: "id"
+        });
+    }
     const [cnt, setCnt] = useState([]);
-
     request.onsuccess = function (event) {
         db = request.result;
         console.log("connected to DB")
-
         db.transaction(['data'], 'readwrite').objectStore('data').getAll().onsuccess = function (event) {
             const { result } = event.target;
-
             if (result) {
                 setCnt(result.length)
-
-
             };
         }
     }
-
-
-
-
-
-
-
-
     return (
         <div>
 
